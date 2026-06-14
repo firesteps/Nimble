@@ -109,7 +109,7 @@ public enum ExpectationStyle {
 public struct MatcherResult {
     /// Status indicates if the matcher matches, does not match, or fails.
     public var status: MatcherStatus
-    private var messageProvider: () -> ExpectationMessage
+    var messageProvider: () -> ExpectationMessage
 
     /// The error message that can be displayed if it does not match.
     /// Evaluated lazily — only computed when accessed (i.e. when a failure is reported).

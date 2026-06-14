@@ -169,16 +169,25 @@ final class SynchronousTest: XCTestCase {
     }
 }
 
-final class ObjectToDescribe: CustomStringConvertible, Equatable {
+final class ObjectToDescribe: CustomStringConvertible, Equatable, @unchecked Sendable {
     let id: Int
-    private(set) var descriptionCallCount: Int = 0
+    private let lock: NSLock
+    private var descriptionCalls: Int = 0
+    var descriptionCallCount: Int {
+        lock.withLock {
+            descriptionCalls
+        }
+    }
 
     init(id: Int) {
         self.id = id
+        self.lock = NSLock()
     }
 
     var description: String {
-        descriptionCallCount += 1
+        lock.withLock {
+            descriptionCalls += 1
+        }
         return "id: \(id)"
     }
 
